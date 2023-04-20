@@ -17,14 +17,20 @@ struct ContentView: View {
                         ForEach(c.content) { content in
                             DisclosureGroup {
                                 Text(content.expanded.text)
+                                Color.green
+                                    .frame(height: 400)
                             } label: {
                                 Text(content.collapsed.text)
+                                Text(content.collapsed.prop1)
+                                Text(content.collapsed.prop2)
+                                Text(content.collapsed.prop3)
                             }
+                            .disclosureGroupStyle(MyDisclosureStyle())
                         }
                     } header: {
                         Text(c.headerTitle)
                     }
-
+                    
                 }
             }
         }
@@ -54,7 +60,9 @@ struct ProblemSet {
     struct ListData: Identifiable {
         var id = UUID()
         let headerTitle: String
-        let content: [Content] = Array(repeating: Content(), count: 3)
+        let content: [Content] = (1...3).map { _ in
+            Content()
+        }
     }
     
     struct Content: Identifiable {
@@ -70,6 +78,36 @@ struct ProblemSet {
     
     struct Collapsed: Identifiable {
         var id = UUID()
-        let text = "Collapsed"
+        let prop1 = "Prop \((0...100).randomElement()!)"
+        let prop2 = "Prop \((0...100).randomElement()!)"
+        let prop3 = "Prop \((0...100).randomElement()!)"
+        let text = "Coll \((0...100).randomElement()!)"
+    }
+}
+
+
+struct MyDisclosureStyle: DisclosureGroupStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        VStack {
+            Button {
+                withAnimation {
+                    configuration.isExpanded.toggle()
+                }
+            } label: {
+                HStack(alignment: .firstTextBaseline) {
+                    configuration.label
+                    Spacer()
+                    Text(configuration.isExpanded ? "hide" : "show")
+                        .foregroundColor(.accentColor)
+                        .font(.caption.lowercaseSmallCaps())
+//                        .animation(nil, value: configuration.isExpanded)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            if configuration.isExpanded {
+                configuration.content
+            }
+        }
     }
 }
