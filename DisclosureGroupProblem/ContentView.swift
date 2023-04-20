@@ -14,18 +14,23 @@ struct ContentView: View {
             List {
                 ForEach(data.content) { c in
                     Section {
-                        ForEach(c.content) { content in
-                            DisclosureGroup {
-                                Text(content.expanded.text)
-                                Color.green
-                                    .frame(height: 400)
-                            } label: {
-                                Text(content.collapsed.text)
-                                Text(content.collapsed.prop1)
-                                Text(content.collapsed.prop2)
-                                Text(content.collapsed.prop3)
+                        Grid {
+                            ForEach(c.content) { content in
+                                DisclosureGroup {
+                                    Text(content.expanded.text)
+                                    Color.green
+                                        .frame(height: 400)
+                                } label: {
+                                    
+                                    GridRow {
+                                        Text(content.collapsed.text)
+                                        Text(content.collapsed.prop1)
+                                        Text(content.collapsed.prop2)
+                                        Text(content.collapsed.prop3)
+                                    }
+                                }
+                                .disclosureGroupStyle(MyDisclosureStyle())
                             }
-                            .disclosureGroupStyle(MyDisclosureStyle())
                         }
                     } header: {
                         Text(c.headerTitle)
@@ -100,7 +105,7 @@ struct MyDisclosureStyle: DisclosureGroupStyle {
                     Text(configuration.isExpanded ? "hide" : "show")
                         .foregroundColor(.accentColor)
                         .font(.caption.lowercaseSmallCaps())
-//                        .animation(nil, value: configuration.isExpanded)
+                    //                        .animation(nil, value: configuration.isExpanded)
                 }
                 .contentShape(Rectangle())
             }
